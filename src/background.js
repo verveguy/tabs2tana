@@ -1,5 +1,16 @@
+/* 
+  background.js is the web worker code, which is basically "faceless" from a
+  browser tab perspective.
 
-// this function will be injected into each tab when the user 
+  Note that we use the function injection style here to run code within
+  each browser tab. This might be undesirable with respect to permissions:
+  we seem to get prompted on each site we try to capture...
+*/
+
+// this function will be injected into each tab when the user activates this extension
+// by clicking on the extension icon in their address bar 
+// or by using the keyboard equivalent
+
 function injectedFunction(data) {
   // grab the basic info from the page
   const title = document.title;
@@ -30,6 +41,7 @@ function injectedFunction(data) {
   return data;
 }
 
+// wire up our listener for invocation of our extension
 
 chrome.action.onClicked.addListener(async (tab) => {
   console.log("got click");
@@ -55,7 +67,7 @@ chrome.action.onClicked.addListener(async (tab) => {
   }
 });
 
-
+// useless debug message. Doesn't appear anywhere I can see...
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Installed tabs2tana");
   // mark our extension to say we're alive
