@@ -11,7 +11,7 @@
 // by clicking on the extension icon in their address bar 
 // or by using the keyboard equivalent
 
-function injectedFunction(data) {
+function gatherTabData() {
   // grab the basic info from the page
   const title = document.title;
   const url = window.location.href;
@@ -25,8 +25,11 @@ function injectedFunction(data) {
   }
 
   // basic format of a tana-paste entry
-  data += `  - ${title} #website\n    - Description:: ${description}\n    - Url:: ${url}\n`;
-  
+  const data = `  - ${title} #website\n    - Description:: ${description}\n    - Url:: ${url}\n`;
+  return data;
+}
+
+function writeClipboard(data) {
   // and put the result on the clipboard. We have to do this here because
   // the background.js webworker cannot
   
@@ -38,8 +41,8 @@ function injectedFunction(data) {
       console.error("Error copying data to clipboard: ", err);
     }
   );
-  return data;
 }
+
 
 // wire up our listener for invocation of our extension
 
@@ -50,20 +53,26 @@ chrome.action.onClicked.addListener(async (tab) => {
   if (tabs) {
     let data = `%%tana%%\n- Tab Workspace #workspace\n`;
 
+    // gather all tab data serially, ensuring no race condition
     for (const tab of tabs) {
       console.log(tab.id)
       if (!tab.url.includes("chrome://")) {
         const results = await chrome.scripting.executeScript(
           {
             target: { tabId: tab.id },
-            func: injectedFunction,
-            args: [data]
+            func: gatherTabData,
           });
-        // we have to accumulate results since the clipboard write
-        // i actually in the injected tab function
-        data = results[0].result;
+        // accumulate results since the clipboard write
+        data += results[0].result;
       }
     }
+
+    await chrome.scripting.executeScript(
+      {
+        target: { tabId: tab.id },
+        func: writeClipboard,
+        args: [data]
+      });
   }
 });
 
