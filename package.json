@@ -2,7 +2,7 @@
     "name": "tabs2tana",
     "description": "Saves the current workspace as a set of Tana nodes via the clipboard and tana-paste format",
     "version": "0.0.1",
-    "homepage": "http://chrome.google.com/webstore",
+    "homepage": "https://github.com/verveguy/tabs2tana",
     "author": "Brett Adam",
     "repository": {
         "type": "git",
