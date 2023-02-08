@@ -6,6 +6,15 @@ To bootstrap this git repo into Chrome locally, first clone the repo.
 Then run `npm install` and `npm run build`. 
 Got to Chrome extension manager, turn on Developer mode and `load unpacked` the `dist` directory.
 
+The format used on the clipboard is very simple:
+
+```%%tana%%
+- Tab Workspace #workspace
+  - Title of site #website
+    - Description:: <from site metadata>
+    - Url:: <of open tab>
+```
+  
 ## Development 
 
 This extension was created with [Extension CLI](https://oss.mobilefirst.me/extension-cli/)!
