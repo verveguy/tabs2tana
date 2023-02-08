@@ -8,7 +8,8 @@ Got to Chrome extension manager, turn on Developer mode and `load unpacked` the 
 
 The format used on the clipboard is very simple:
 
-```%%tana%%
+```
+%%tana%%
 - Tab Workspace #workspace
   - Title of site #website
     - Description:: <from site metadata>
