@@ -1,0 +1,11 @@
+{
+    "appName": {
+        "message": "tabs2tana"
+    },
+    "appShortName": {
+        "message": "tabs2tana"
+    },
+    "appDescription": {
+        "message": "Saves the tabs open in the current window as a set of Tana nodes onto the clipboard in tana-paste format."
+    }
+}
