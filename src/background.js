@@ -33,6 +33,9 @@ function writeClipboard(data) {
   // and put the result on the clipboard. We have to do this here because
   // the background.js webworker cannot
   
+  // this seems to help avoid "DOMException: not focused" errors from time to time
+  // ref: Stackoverflow 
+  window.focus();
   navigator.clipboard.writeText(data).then(
     function () {
       console.log("Successfully copied data to clipboard");
@@ -49,7 +52,7 @@ function writeClipboard(data) {
 chrome.action.onClicked.addListener(async (tab) => {
   console.log("got click");
 
-  const tabs = await chrome.tabs.query({ currentWindow: true });
+  const tabs = await chrome.tabs.query({ lastFocusedWindow: true });
   if (tabs) {
     let data = `%%tana%%\n- Tab Workspace #workspace\n`;
 
