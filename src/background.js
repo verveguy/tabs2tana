@@ -16,23 +16,64 @@ function gatherTabData() {
   const title = document.title;
   const url = window.location.href;
   let description = "";
+
+  // basic format of a tana-paste entry
+  let data = `%%tana%%\n- ${title} #website`;
+
+  let fields = [];
+  fields.push(`\n  - Url:: ${url}`);
+
   const metaTags = document.querySelectorAll("meta");
+
   for (const element of metaTags) {
     if (element.name === "description") {
       description = element.content;
-      break;
+      fields.push("\n  - Description:: " + description);
+    } else {
+      let property = element.getAttribute("property");
+      let content = element.content;
+      if (property === "og:description") {
+        // no point in duplicating the description
+        if (content != description) {
+          fields.push("\n  - og:Description:: " + content);
+        }
+      }
+      if (property === "og:title") {
+        // no point in duplicating the title
+        if (content !== title) {
+          fields.push("\n  - og:Title:: " + content);
+        }
+      }
+      if (property === "og:url") {
+        // no point in duplicating the url
+        if (content != url) {
+          fields.push("\n  - og:Url:: " + content);
+        }
+      }
+      if (property === "og:type") {
+        fields.push("\n  - og:Type:: " + content);
+      }
+      if (property === "og:image") {
+        fields.push("\n  - og:Image:: " + content);
+      }
+
+      if (property === "og:site_name") {
+        fields.push("\n  - og:Site:: " + content);
+      }
     }
   }
 
-  // basic format of a tana-paste entry
-  const data = `  - ${title} #website\n    - Description:: ${description}\n    - Url:: ${url}\n`;
+  fields.forEach((field) => {
+    data += field;
+  });
+
   return data;
 }
 
 function writeClipboard(data) {
   // and put the result on the clipboard. We have to do this here because
   // the background.js webworker cannot
-  
+
   // this seems to help avoid "DOMException: not focused" errors from time to time
   // ref: Stackoverflow 
   window.focus();
